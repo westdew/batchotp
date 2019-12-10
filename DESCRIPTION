@@ -2,7 +2,7 @@ Package: batchotp
 Type: Package
 Title: Batch Request OTP from R
 Version: 0.1.0
-Author: Nathaniel A. Dewey
+Author: Nathaniel A. Dewey <ndewey1@jhu.edu>
 Maintainer: Nathaniel A. Dewey <ndewey1@jhu.edu>
 Description: This package contains tools for interfacing with an OpenTripPlanner (OTP) server from R.
     The main tool sends a batch request (templated python script) to the OTP server REST path /otp/scripting/run and fetches the data returned.
