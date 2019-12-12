@@ -10,8 +10,9 @@ Description: This package contains tools for interfacing with an OpenTripPlanner
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends:
+    tidyverse
 Imports:
-    tidyverse,
     httr,
     whisker,
     base64enc,

@@ -27,7 +27,7 @@ LoadRouter.BatchOTP <- function(otp, router_id) {
   resp <- httr::GET(
     paste0(.otp_server_base_url(otp), "/otp/routers/", router_id)
   )
-  json <- fromJSON(content(resp, "text", encoding="UTF-8"))
+  json <- jsonlite::fromJSON(httr::content(resp, "text", encoding="UTF-8"))
 
   print(paste0("Loaded router ", json$routerId, ": ", json$centerLatitude, "? ", json$centerLongitude, "? | ",
                .seconds_to_date(json$transitServiceStarts), " to ", .seconds_to_date(json$transitServiceEnds)))
@@ -47,7 +47,7 @@ BatchRequest.BatchOTP <- function(otp, req) {
   writeLines(whisker::whisker.render(template, req), "otp_script_output.py")
 
   # send the python template script to the server
-  f <- upload_file("otp_script_output.py")
+  f <- httr::upload_file("otp_script_output.py")
   resp <- httr::POST(
     paste0(.otp_server_base_url(otp), "/otp/scripting/run"),
     body=list(scriptfile=f),
@@ -70,10 +70,10 @@ BatchRequest.BatchOTP <- function(otp, req) {
   csv_df <- read.csv(file=csv_file_path)
   if (has_time) {
     validate_df_columns(csv_df, c("id", "lat", "lon", "time"), csv_file_path)
-    csv_df <- select(csv_df, id, lat, lon, time)
+    csv_df <- dplyr::select(csv_df, id, lat, lon, time)
   } else {
     validate_df_columns(csv_df, c("id", "lat", "lon"), csv_file_path)
-    csv_df <- select(csv_df, id, lat, lon)
+    csv_df <- dplyr::select(csv_df, id, lat, lon)
   }
 
   # save and reload compressed valid csv
