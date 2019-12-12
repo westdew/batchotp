@@ -54,6 +54,9 @@ BatchRequest.BatchOTP <- function(otp, req) {
     encode="multipart"
   )
 
+  # clean up
+  file.remove("otp_script_output.py")
+
   # create a data frame from the server response
   raw_csv <- paste0(content(resp, "text", encoding="UTF-8"), "\n")
   df <- read.csv(text=raw_csv)
