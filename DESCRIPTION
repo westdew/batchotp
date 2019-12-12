@@ -13,7 +13,4 @@ LazyData: true
 Depends:
     tidyverse
 Imports:
-    httr,
-    whisker,
-    base64enc,
-    jsonlite
+    whisker
