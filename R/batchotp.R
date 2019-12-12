@@ -43,7 +43,7 @@ BatchRequest.BatchOTP <- function(otp, req) {
   req$dests_filename <- NULL
 
   # customize the python template script for the job parameters
-  template <- readLines("otp_script_template.py")
+  template <- readLines(system.file("python", "otp_script_template.py", package = "batchotp"))
   writeLines(whisker::whisker.render(template, req), "otp_script_output.py")
 
   # send the python template script to the server
@@ -55,7 +55,7 @@ BatchRequest.BatchOTP <- function(otp, req) {
   )
 
   # clean up
-  file.remove("otp_script_output.py")
+  #file.remove("otp_script_output.py")
 
   # create a data frame from the server response
   raw_csv <- paste0(content(resp, "text", encoding="UTF-8"), "\n")
