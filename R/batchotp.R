@@ -44,18 +44,16 @@ BatchRequest.BatchOTP <- function(otp, req) {
 
   # customize the python template script for the job parameters
   template <- readLines(system.file("python", "otp_script_template.py", package = "batchotp"))
-  writeLines(whisker::whisker.render(template, req), "otp_script_output.py")
+  otp_script_output_py_filepath <- file.path(tempdir(), "otp_script_output.py")
+  writeLines(whisker::whisker.render(template, req), otp_script_output_py_filepath)
 
   # send the python template script to the server
-  f <- httr::upload_file("otp_script_output.py")
+  f <- httr::upload_file(otp_script_output_py_filepath)
   resp <- httr::POST(
     paste0(.otp_server_base_url(otp), "/otp/scripting/run"),
     body=list(scriptfile=f),
     encode="multipart"
   )
-
-  # clean up
-  #file.remove("otp_script_output.py")
 
   # create a data frame from the server response
   raw_csv <- paste0(content(resp, "text", encoding="UTF-8"), "\n")
@@ -80,9 +78,10 @@ BatchRequest.BatchOTP <- function(otp, req) {
   }
 
   # save and reload compressed valid csv
-  write.csv(csv_df, file="temp.csv", row.names=FALSE)
-  csv_text <- readChar("temp.csv", file.info("temp.csv")$size)
-  file.remove("temp.csv")
+  temp_csv_filepath <- file.path(tempdir(), "temp.csv")
+  write.csv(csv_df, file=temp_csv_filepath, row.names=FALSE)
+  csv_text <- readChar(temp_csv_filepath, file.info(temp_csv_filepath)$size)
+  file.remove(temp_csv_filepath)
 
   # convert to base64
   csv_text %>% gsub("\r\n", "\n", .) %>% charToRaw %>% base64enc::base64encode(.)
