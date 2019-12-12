@@ -1,9 +1,9 @@
 ### External Dependencies
-library(tidyverse)
-library(httr)
-library(whisker)
-library(base64enc)
-library(jsonlite)
+# library(tidyverse)
+# library(httr)
+# library(whisker)
+# library(base64enc)
+# library(jsonlite)
 
 ### Class - BatchOTP
 # Purpose: Communicate with otp server for remote batch scripting
